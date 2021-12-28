@@ -11,6 +11,10 @@ class ContactController extends Controller
         $contacts = Contact::all();
         return $contacts;
     }
+    public function getContact($id){
+        $contact = Contact::where('id',$id)->first();
+        return $contact;
+    }
     public function saveContact(Request $request){
         $contact = new Contact();
         $contact->name = $request->name;
@@ -23,5 +27,16 @@ class ContactController extends Controller
             return response()->json(['status' => false, 'message' => 'Error, Please try again']);
         }
 
+    }
+    public function updateContact($id, Request $request){
+        $contact = Contact::find($id);
+        $contact->update($request->all());
+
+        return response()->json('Contact updated!');
+    }
+    public function deleteContact($id){
+        $contact = Contact::find($id);
+        $contact->delete();
+        return response()->json('Contact deleted!');
     }
 }

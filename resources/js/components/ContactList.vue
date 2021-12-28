@@ -18,7 +18,12 @@
                     <td>{{contact.email}}</td>
                     <td>{{contact.contact_no}}</td>
                     <td>{{contact.designation}}</td>
-                    <td><button class="btn btn-danger btn-sm">Delete</button></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <router-link :to="{name: 'edit', params: { id: contact.id }}" class="btn btn-success btn-sm">Edit</router-link>
+                            <button class="btn btn-danger btn-sm" @click="deleteContact(contact.id)">Delete</button>
+                        </div>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -37,18 +42,21 @@ export default {
     created(){
         this.loadData();
     },
-    mounted(){
-        
-    },
     methods:{
         loadData(){
             let url = this.url + '/api/getContacts';
-            // console.log(url);
             this.axios.get(url).then(response=> {
                 this.contacts = response.data
-                console.log(this.contacts)
             });
         },
+        deleteContact(id){
+            this.axios
+                    .delete(`http://localhost:8000/api/deleteContact/${id}`)
+                    .then(response => {
+                        let i = this.contacts.map(data => data.id).indexOf(id);
+                        this.contacts.splice(i, 1)
+                    });
+        }
     }
 }
 </script>
